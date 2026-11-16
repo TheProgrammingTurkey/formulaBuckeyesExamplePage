@@ -79,20 +79,6 @@ function yearsFromHeaders(headers) {
   });
 }
 
-function createMissingRecord(year) {
-  return {
-    year,
-    event: "",
-    overall: "N/A",
-    specs: {},
-    results: EVENTS.map((event) => ({
-      event,
-      finish: "N/A",
-      time: null
-    }))
-  };
-}
-
 function seasonCode(year) {
   return `FB-${String(year % 100).padStart(2, "0")}`;
 }
@@ -168,13 +154,10 @@ async function loadArchiveData() {
     });
   }
 
-  const latestYear = Math.max(2026, ...recordsByYear.keys());
-  const earliestYear = Math.min(1994, ...recordsByYear.keys());
-  SEASONS = Array.from(
-    { length: latestYear - earliestYear + 1 },
-    (_, index) => latestYear - index
-  );
-  RECORDS = SEASONS.map((year) => recordsByYear.get(year) || createMissingRecord(year));
+  SEASONS = Array.from(recordsByYear.keys())
+    .filter((year) => year !== 2021)
+    .sort((first, second) => second - first);
+  RECORDS = SEASONS.map((year) => recordsByYear.get(year));
 }
 
 const elements = {
@@ -259,9 +242,7 @@ function render() {
       </div>
     </article>`;
   }).join("");
-  const carImage = record.year === 2026
-    ? '<img src="exampleIMG.jpeg" alt="Example Formula Buckeyes car">'
-    : "";
+  const carImage = '<img src="exampleIMG.jpeg" alt="Formula Buckeyes car">';
   const specsSection = Object.keys(record.specs).length
     ? `<section class="specs-section" aria-label="Car specifications">
         <div class="section-heading"><span>CAR SPECIFICATIONS</span></div>

@@ -53,7 +53,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .brand-copy strong { font: 600 15px var(--display); letter-spacing: .12em; }
 .brand-copy strong span { color: var(--scarlet-bright); }
 .brand-copy small, .art-caption,
-.panel-footer, .demo-notice, .result-table th, .spec-label, .result-label {
+.demo-notice, .result-table th, .spec-label, .result-label {
   font-family: var(--mono);
 }
 .brand-copy small { color: var(--muted); font-size: 8px; letter-spacing: .13em; }
@@ -87,9 +87,10 @@ button { -webkit-tap-highlight-color: transparent; }
   min-height: 150px;
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
-.intro-copy { position: relative; z-index: 1; padding-bottom: 3px; }
+.intro-copy { position: relative; z-index: 1; width: 100%; padding-bottom: 3px; text-align: center; }
 h1, h2, p { margin-top: 0; }
 h1 { margin: 12px 0 4px; font: 500 clamp(36px, 4vw, 51px)/1.08 var(--display); letter-spacing: .015em; }
 h1 span { color: var(--scarlet-bright); }
@@ -193,22 +194,9 @@ h2 { margin: 6px 0 0; font: 500 23px/1.1 var(--display); letter-spacing: .025em;
   font-size: 8px;
   letter-spacing: .025em;
 }
-.demo-notice span { color: var(--gold); font-size: 8px; letter-spacing: .08em; white-space: nowrap; }
+.demo-notice span { color: var(--gold); font-size: 8px; letter-spacing: .08em; }
 .panel-content { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #5b575a transparent; scrollbar-width: thin; animation: content-in .32s ease both; }
 @keyframes content-in { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-.panel-footer {
-  display: flex;
-  flex: 0 0 36px;
-  align-items: center;
-  justify-content: flex-end;
-  border-top: 1px solid var(--line);
-  color: #777476;
-  font-size: 8px;
-  letter-spacing: .06em;
-}
-.footer-instruction { display: flex; align-items: center; gap: 4px; }
-kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; border: 1px solid #5b575a; border-radius: 2px; color: #bdb8b1; font: 8px var(--mono); }
-
 /* The overview uses a compact scorecard, keeping the key season summary visible. */
 .overview-grid { display: grid; grid-template-columns: 1.18fr .82fr; gap: 12px; height: 100%; }
 .overall-card, .podium-card { position: relative; overflow: hidden; border: 1px solid var(--line); background: #222224; }
@@ -252,8 +240,8 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
 .specs-heading strong { color: var(--gold); font: 9px var(--mono); font-weight: 400; }
 .spec-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
 .spec-item { min-width: 0; min-height: 52px; padding: 8px 9px 7px; border: 1px solid rgba(243,240,233,.1); background: rgba(255,255,255,.018); }
-.spec-label { display: block; overflow: hidden; color: #8d8889; font-size: 7px; letter-spacing: .05em; text-overflow: ellipsis; white-space: nowrap; }
-.spec-value { display: block; overflow: hidden; margin-top: 6px; color: #e7e0d8; font: 500 11px var(--display); letter-spacing: .025em; text-overflow: ellipsis; white-space: nowrap; }
+.spec-label { display: block; color: #8d8889; font-size: 7px; letter-spacing: .05em; line-height: 1.2; }
+.spec-value { display: block; margin-top: 6px; color: #e7e0d8; font: 500 11px var(--display); letter-spacing: .025em; line-height: 1.35; }
 .spec-empty { display: grid; min-height: 170px; place-items: center; border: 1px dashed #ffffff24; color: #aaa4a2; text-align: center; }
 .spec-empty strong { display: block; margin-bottom: 8px; color: var(--paper); font: 500 20px var(--display); }
 .spec-empty p { max-width: 360px; margin: 0; font-size: 11px; line-height: 1.6; }
@@ -289,8 +277,6 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
   h2 { font-size: 19px; }
   .demo-notice { align-items: flex-start; gap: 6px; margin: 10px 0; padding: 6px; font-size: 7px; line-height: 1.4; }
   .demo-notice span { font-size: 7px; }
-  .panel-footer { flex-basis: 31px; font-size: 7px; }
-  .footer-instruction { gap: 2px; font-size: 0; }
   .overview-grid { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; gap: 7px; }
   .overall-card, .podium-card { padding: 10px; }
   .rank-number { font-size: 54px; }
@@ -333,7 +319,7 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
 .season-data { height: 100%; min-height: 0; display: grid; grid-template-rows: auto auto; gap: 12px; }
 .season-main { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; gap: 12px; }
 .summary-kicker { color: #aaa4a1; font: 8px var(--mono); letter-spacing: .09em; }
-.overall-place { color: var(--paper); font: 500 clamp(16px, 1.8vw, 22px)/1.05 var(--display); overflow-wrap: anywhere; }
+.overall-place { color: var(--paper); font: 500 clamp(16px, 1.8vw, 22px)/1.05 var(--display); }
 .car-image-frame { width: 100%; min-width: 0; aspect-ratio: 16 / 9; }
 .car-image-frame img { display: block; width: 100%; height: 100%; border-radius: 4px; object-fit: cover; }
 .results-section, .specs-section { min-height: 0; display: flex; flex-direction: column; }
@@ -341,7 +327,7 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
 .results-grid { display: grid; flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
 .result-card { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 7px; border: 1px solid rgba(243,240,233,.1); background: rgba(255,255,255,.018); }
 .result-event { display: grid; min-width: 0; gap: 2px; }
-.result-event strong { overflow: hidden; color: #e4ded6; font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.result-event strong { color: #e4ded6; font-size: 9px; font-weight: 500; line-height: 1.25; }
 .event-time { color: var(--gold); font: 8px var(--mono); }
 .result-finish { display: flex; flex: 0 0 auto; justify-content: flex-end; }
 .result-finish strong { color: #dcd5cd; font: 500 10px var(--display); }
@@ -352,7 +338,6 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
 .spec-label { font-size: 6px; letter-spacing: .07em; }
 .spec-value { margin-top: 3px; font-size: 9px; }
 .spec-empty { display: flex; flex: 1; min-height: 0; align-items: center; padding-left: 9px; border: 1px dashed #ffffff24; color: #999294; font: 8px var(--mono); letter-spacing: .07em; }
-.panel-footer { flex-basis: 27px; font-size: 7px; }
 
 @media (max-width: 850px) {
   .intro { flex-basis: 132px; }
@@ -395,8 +380,6 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
   .spec-label { font-size: 5px; }
   .spec-value { font-size: 7px; }
   .spec-empty { font-size: 6px; }
-  .panel-footer { flex-basis: 25px; font-size: 6px; }
-  .footer-instruction { font-size: 0; }
 }
 
 @media (max-height: 650px) {
@@ -431,8 +414,7 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: #6a6263 #1c1c1e;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 .season-data {
   height: auto;
@@ -512,7 +494,7 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
 .spec-item { justify-content: flex-start; }
 .spec-value {
   overflow: visible;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   line-height: 1.35;
   text-overflow: clip;
   white-space: normal;
@@ -532,4 +514,28 @@ kbd { display: inline-grid; width: 14px; height: 14px; place-items: center; bord
   .result-event { flex: 1; }
   .result-event strong { font-size: 10px; }
   .result-finish strong { font-size: 12px; }
+}
+
+@media (max-width: 850px) {
+  .season-main { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 851px) and (max-width: 1100px) {
+  .result-event strong { font-size: clamp(8px, 1vw, 11px); }
+  .result-finish strong { font-size: clamp(9px, 1.15vw, 12px); }
+  .result-card { padding: 6px; }
+  .spec-value { font-size: clamp(9px, 1.1vw, 12px); }
+}
+
+@media (max-width: 380px) {
+  .topbar { height: auto; min-height: 65px; flex-basis: auto; flex-wrap: wrap; justify-content: center; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+  .primary-nav { height: auto; flex-wrap: wrap; justify-content: center; gap: 6px 12px; }
+}
+
+@media (max-width: 420px) {
+  .results-grid, .spec-grid { grid-template-columns: minmax(0, 1fr); }
 }
