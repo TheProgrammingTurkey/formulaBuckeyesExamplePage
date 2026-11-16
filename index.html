@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171719">
+  <meta name="description" content="Explore Formula Buckeyes competition results and vehicle specifications from 1994 onward.">
+  <title>Team History | Formula Buckeyes</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#history" aria-label="Formula Buckeyes home">
+        <span class="brand-mark" aria-hidden="true">FB</span>
+        <span class="brand-copy">
+          <strong>FORMULA <span>BUCKEYES</span></strong>
+          <small>THE OHIO STATE UNIVERSITY</small>
+        </span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Main navigation">
+        <a class="nav-link placeholder-link" href="#team" aria-label="Team page placeholder">Team</a>
+        <a class="nav-link placeholder-link" href="#cars" aria-label="Cars page placeholder">Cars</a>
+        <a class="nav-link placeholder-link" href="#competition" aria-label="Competition page placeholder">Competition</a>
+        <a class="nav-link placeholder-link" href="#contact" aria-label="Contact page placeholder">Contact</a>
+      </nav>
+
+      <div class="topbar-note"><span class="status-dot"></span> TEAM ARCHIVE</div>
+    </header>
+
+    <main id="history" class="page-main">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <h1 id="page-title">Formula Buckeyes History</h1>
+          <p class="intro-description">Competition results and vehicle specifications.</p>
+        </div>
+      </section>
+
+      <div class="archive-layout">
+        <aside class="timeline" aria-label="Year timeline">
+          <div class="timeline-heading">
+            <span class="eyebrow">SEASON</span>
+            <span class="timeline-current" id="timelineCurrent">2026</span>
+          </div>
+          <div class="timeline-track" id="timelineTrack" tabindex="0" aria-label="Scrollable season timeline">
+            <div class="timeline-rail" id="timelineRail">
+              <span class="track-line"></span>
+              <span class="track-progress" id="trackProgress"></span>
+              <div class="timeline-marks" id="timelineMarks" role="group" aria-label="Choose a season"></div>
+            </div>
+          </div>
+          <p class="timeline-hint"><span class="mouse-icon" aria-hidden="true">↕</span> Scroll rail · click a year</p>
+        </aside>
+
+        <section class="archive-panel" aria-live="polite">
+          <div class="panel-topline">
+            <h2 class="season-code" id="panelSeason">FB-26</h2>
+            <div class="season-control" aria-label="Change season">
+              <button class="season-arrow" id="previousYear" type="button" aria-label="Previous season">↑</button>
+              <button class="season-arrow" id="nextYear" type="button" aria-label="Next season">↓</button>
+            </div>
+          </div>
+          <div class="panel-content" id="panelContent"></div>
+          <div class="panel-footer">
+            <span class="footer-instruction"><kbd>↑</kbd><kbd>↓</kbd> CHANGE SEASON · SCROLL DATA PANEL</span>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
