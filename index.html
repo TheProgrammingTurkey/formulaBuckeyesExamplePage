@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#171719">
   <meta name="description" content="Explore Formula Buckeyes competition results and vehicle specifications from 1994 onward.">
   <title>Team History | Formula Buckeyes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
@@ -27,14 +30,12 @@
         <a class="nav-link placeholder-link" href="#contact" aria-label="Contact page placeholder">Contact</a>
       </nav>
 
-      <div class="topbar-note"><span class="status-dot"></span> TEAM ARCHIVE</div>
     </header>
 
     <main id="history" class="page-main">
       <section class="intro" aria-labelledby="page-title">
         <div class="intro-copy">
           <h1 id="page-title">Formula Buckeyes History</h1>
-          <p class="intro-description">Competition results and vehicle specifications.</p>
         </div>
       </section>
 
@@ -51,15 +52,17 @@
               <div class="timeline-marks" id="timelineMarks" role="group" aria-label="Choose a season"></div>
             </div>
           </div>
-          <p class="timeline-hint"><span class="mouse-icon" aria-hidden="true">↕</span> Scroll rail · click a year</p>
         </aside>
 
         <section class="archive-panel" aria-live="polite">
           <div class="panel-topline">
-            <h2 class="season-code" id="panelSeason">FB-26</h2>
-            <div class="season-control" aria-label="Change season">
-              <button class="season-arrow" id="previousYear" type="button" aria-label="Previous season">↑</button>
-              <button class="season-arrow" id="nextYear" type="button" aria-label="Next season">↓</button>
+            <div class="season-title">
+              <h2 class="season-code" id="panelSeason">FB-26</h2>
+              <p class="season-event" id="panelEvent"></p>
+            </div>
+            <div class="overall-inline">
+              <span class="summary-kicker">OVERALL</span>
+              <strong class="overall-place" id="panelOverall">N/A</strong>
             </div>
           </div>
           <div class="panel-content" id="panelContent"></div>

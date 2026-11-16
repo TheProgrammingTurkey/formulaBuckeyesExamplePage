@@ -3,9 +3,8 @@ let SEASONS = [];
 let RECORDS = [];
 
 const EVENTS = [
-  ["Design", "Engineering"], ["Cost", "Business"], ["Presentation", "Business"],
-  ["Acceleration", "Dynamic"], ["Skidpad", "Dynamic"], ["Autocross", "Dynamic"],
-  ["Endurance", "Dynamic"], ["Efficiency", "Dynamic"]
+  "Cost", "Presentation", "Acceleration",
+  "Skidpad", "Autocross", "Endurance", "Efficiency"
 ];
 
 const ordinal = (number) => {
@@ -83,13 +82,11 @@ function yearsFromHeaders(headers) {
 function createMissingRecord(year) {
   return {
     year,
-    isElectric: year >= 2025,
-    hasSeasonData: false,
+    event: "",
     overall: "N/A",
     specs: {},
-    results: EVENTS.map(([event, group]) => ({
+    results: EVENTS.map((event) => ({
       event,
-      group,
       finish: "N/A",
       time: null
     }))
@@ -131,6 +128,7 @@ async function loadArchiveData() {
     const label = (row[0] || "").trim();
     if (!label) continue;
     if (label.toUpperCase() === "SPECS PAGE") break;
+    if (label.toUpperCase() === "EVENT") continue;
     specRows.push(row);
   }
   const specLabels = specRows.map((row) => row[0].trim()).filter(Boolean);
@@ -152,22 +150,18 @@ async function loadArchiveData() {
       if (!isUnavailableSpec(value)) specs[label] = value;
     }
 
-    const results = EVENTS.map(([event, group]) => {
+    const results = EVENTS.map((event) => {
       const finish = firstValue(event, index) || "N/A";
       const rawTime = event === "Acceleration" || event === "Skidpad"
         ? lastValue(event, index)
         : "";
       const time = /^\d+(?:\.\d+)?$/.test(rawTime) ? `${rawTime} s` : null;
-      return { event, group, finish, time };
+      return { event, finish, time };
     });
     const overall = firstValue("Overall Place", index) || "N/A";
-    const hasSeasonData = overall !== "N/A"
-      || results.some((result) => result.finish !== "N/A" || result.time)
-      || Object.keys(specs).length > 0;
     recordsByYear.set(year, {
       year,
-      isElectric: year >= 2025,
-      hasSeasonData,
+      event: firstValue("Event", index),
       overall,
       specs,
       results
@@ -190,10 +184,10 @@ const elements = {
   timelineCurrent: document.querySelector("#timelineCurrent"),
   trackProgress: document.querySelector("#trackProgress"),
   panelSeason: document.querySelector("#panelSeason"),
+  panelOverall: document.querySelector("#panelOverall"),
+  panelEvent: document.querySelector("#panelEvent"),
   panelContent: document.querySelector("#panelContent"),
-  archivePanel: document.querySelector(".archive-panel"),
-  previousYear: document.querySelector("#previousYear"),
-  nextYear: document.querySelector("#nextYear")
+  archivePanel: document.querySelector(".archive-panel")
 };
 
 let currentIndex = 0;
@@ -245,51 +239,45 @@ function render() {
   const record = RECORDS[currentIndex];
   elements.timelineCurrent.textContent = record.year;
   elements.trackProgress.style.height = `${currentIndex * TIMELINE_STEP}px`;
-  elements.previousYear.disabled = currentIndex === 0;
-  elements.nextYear.disabled = currentIndex === RECORDS.length - 1;
   elements.panelSeason.textContent = seasonCode(record.year);
+  elements.panelOverall.textContent = displayFinish(record.overall);
+  elements.panelEvent.textContent = record.event;
+  elements.panelEvent.hidden = !record.event;
 
-  const resultCards = record.results.map(({ event, group, finish, time }) => {
+  const resultCards = record.results.map(({ event, finish, time }) => {
     const numericFinish = /^\d+$/.test(finish);
     const position = displayFinish(finish);
-    const timeLabel = time ? `<small class="event-time">TIME ${escapeHtml(time)}</small>` : "";
+    const timeLabel = time ? `<small class="event-time">${escapeHtml(time)}</small>` : "";
     return `
     <article class="result-card">
       <div class="result-event">
         <strong>${escapeHtml(event)}</strong>
-        <span>${escapeHtml(group)}</span>
         ${timeLabel}
       </div>
       <div class="result-finish">
         <strong class="${numericFinish && Number(finish) <= 3 ? "top-three" : ""}">${escapeHtml(position)}</strong>
-        ${numericFinish ? "<span>PLACE</span>" : ""}
       </div>
     </article>`;
   }).join("");
-  const overallIsNumeric = /^\d+$/.test(record.overall);
-  const overallLabel = record.hasSeasonData ? displayFinish(record.overall) : "N/A";
-  const seriesLabel = record.isElectric ? "FORMULA SAE ELECTRIC" : "FORMULA SAE";
-  const specCount = Object.keys(record.specs).length;
-  const specsSection = specCount
+  const carImage = record.year === 2026
+    ? '<img src="exampleIMG.jpeg" alt="Example Formula Buckeyes car">'
+    : "";
+  const specsSection = Object.keys(record.specs).length
     ? `<section class="specs-section" aria-label="Car specifications">
-        <div class="section-heading"><span>CAR SPECIFICATIONS</span><small>${specCount} FIELDS · ${record.isElectric ? "ELECTRIC" : "COMBUSTION"} CAR</small></div>
+        <div class="section-heading"><span>CAR SPECIFICATIONS</span></div>
         ${renderSpecs(record)}
       </section>`
     : "";
 
   elements.panelContent.innerHTML = `
     <div class="season-data">
-      <section class="overall-summary" aria-label="Overall season finish">
-        <span class="summary-kicker">${seriesLabel} · OVERALL</span>
-        <strong class="overall-place">${escapeHtml(overallLabel)}</strong>
-        <span class="summary-teams">${overallIsNumeric ? "OVERALL PLACE" : record.hasSeasonData ? "SEASON RESULT" : "NO RESULT DATA"}</span>
-        <span class="summary-divider"></span>
-        <span class="summary-score">${record.isElectric ? "ELECTRIC" : "COMBUSTION"}</span>
-      </section>
-      <section class="results-section" aria-label="Competition category finishes">
-        <div class="section-heading"><span>COMPETITION FINISHES</span><small>FINISH / CATEGORY</small></div>
-        <div class="results-grid">${resultCards}</div>
-      </section>
+      <div class="season-main">
+        <section class="results-section" aria-label="Competition finishes">
+          <div class="section-heading"><span>COMPETITION FINISHES</span></div>
+          <div class="results-grid">${resultCards}</div>
+        </section>
+        <div class="car-image-frame">${carImage}</div>
+      </div>
       ${specsSection}
     </div>`;
 
@@ -428,8 +416,6 @@ elements.panelContent.innerHTML = `
     <strong>LOADING SEASON ARCHIVE</strong>
     <p>Reading results and vehicle specifications from the CSV file.</p>
   </div>`;
-elements.previousYear.disabled = true;
-elements.nextYear.disabled = true;
 loadArchiveData().then(() => {
   const defaultIndex = SEASONS.indexOf(2026);
   currentIndex = defaultIndex >= 0 ? defaultIndex : 0;
@@ -495,8 +481,6 @@ elements.timelineMarks.addEventListener("click", (event) => {
     : nearestTimelineIndex(event.clientY);
   transitionTo(index);
 });
-elements.previousYear.addEventListener("click", () => transitionTo(currentIndex - 1));
-elements.nextYear.addEventListener("click", () => transitionTo(currentIndex + 1));
 document.querySelectorAll(".placeholder-link").forEach((link) => {
   link.addEventListener("click", (event) => event.preventDefault());
 });
