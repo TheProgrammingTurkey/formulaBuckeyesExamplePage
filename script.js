@@ -1,24 +1,29 @@
+// Results and vehicle specifications are loaded from the team's exported sheet.
 const DATA_FILE = "FormulaBuckeyesSpecs.csv";
 let SEASONS = [];
 let RECORDS = [];
 
+// Keep the event names in the same order as the archive's competition cards.
 const EVENTS = [
   "Cost", "Presentation", "Acceleration",
   "Skidpad", "Autocross", "Endurance", "Efficiency"
 ];
 
+// Ordinal suffixes need a special case for 11th, 12th, and 13th.
 const ordinal = (number) => {
   const remainder = number % 100;
   const suffix = remainder >= 11 && remainder <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" }[number % 10] || "th");
   return `${number}${suffix}`;
 };
 
+// Escape CSV-derived values before placing them in HTML templates.
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
   })[character]);
 }
 
+// Parse quoted CSV fields, including commas and newlines inside quotes.
 function parseCsv(text) {
   const rows = [];
   let row = [];
@@ -59,6 +64,7 @@ function parseCsv(text) {
   return rows;
 }
 
+// Expand FB-YY headers into full years, accounting for a century rollover.
 function yearsFromHeaders(headers) {
   const seasonColumns = headers
     .map((header, index) => {
@@ -83,10 +89,12 @@ function seasonCode(year) {
   return `FB-${String(year % 100).padStart(2, "0")}`;
 }
 
+// Spreadsheet placeholders should not appear as vehicle specifications.
 function isUnavailableSpec(value) {
   return !value || /^(?:N\/A|N\.A\.?|NA|NONE|NOT AVAILABLE|\.{2,}|…+|[-–—]+)$/i.test(value);
 }
 
+// Normalize the final season table into one record per year for the UI.
 async function loadArchiveData() {
   const response = await fetch(DATA_FILE);
   if (!response.ok) throw new Error(`CSV request failed (${response.status}).`);
@@ -101,6 +109,7 @@ async function loadArchiveData() {
   const table = rows.slice(tableStart);
   const headers = table[0];
   const seasonColumns = yearsFromHeaders(headers);
+  // Labels can repeat in the sheet, so preserve every row for first/last lookup.
   const rowsByLabel = new Map();
   for (const row of table.slice(1)) {
     const label = (row[0] || "").trim().toUpperCase();
@@ -118,6 +127,7 @@ async function loadArchiveData() {
     specRows.push(row);
   }
   const specLabels = specRows.map((row) => row[0].trim()).filter(Boolean);
+  // Timing rows may follow placement rows; use the appropriate occurrence.
   const firstValue = (label, columnIndex) => {
     const matchingRows = rowsByLabel.get(label.toUpperCase()) || [];
     return (matchingRows[0] && matchingRows[0][columnIndex] || "").trim();
@@ -173,6 +183,7 @@ const elements = {
   archivePanel: document.querySelector(".archive-panel")
 };
 
+// Wheel, keyboard, and touch input share transition progress and state.
 let currentIndex = 0;
 let scrollAccumulation = 0;
 let panelEdgeAccumulation = 0;
@@ -203,6 +214,7 @@ function renderTimeline() {
   }).join("");
 }
 
+// Render only available specs and escape both labels and values from the CSV.
 function renderSpecs(record) {
   const entries = Object.entries(record.specs);
   if (!entries.length) return "";
@@ -214,10 +226,12 @@ function renderSpecs(record) {
   return `<div class="spec-grid">${items}</div>`;
 }
 
+// Keep text finishes as-is while formatting numeric finishes as ordinals.
 function displayFinish(value) {
   return /^\d+$/.test(value) ? ordinal(Number(value)) : value;
 }
 
+// Refresh the selected-year heading and all data cards from the current record.
 function render() {
   const record = RECORDS[currentIndex];
   elements.timelineCurrent.textContent = record.year;
@@ -242,7 +256,6 @@ function render() {
       </div>
     </article>`;
   }).join("");
-  const carImage = '<img src="exampleIMG.jpeg" alt="Formula Buckeyes car">';
   const specsSection = Object.keys(record.specs).length
     ? `<section class="specs-section" aria-label="Car specifications">
         <div class="section-heading"><span>CAR SPECIFICATIONS</span></div>
@@ -257,7 +270,7 @@ function render() {
           <div class="section-heading"><span>COMPETITION FINISHES</span></div>
           <div class="results-grid">${resultCards}</div>
         </section>
-        <div class="car-image-frame">${carImage}</div>
+        <div class="car-image-frame"><img src="exampleIMG.jpeg" alt="Formula Buckeyes car"></div>
       </div>
       ${specsSection}
     </div>`;
@@ -270,6 +283,7 @@ function render() {
   keepCurrentTimelineMarkVisible();
 }
 
+// Keep the selected year in view when changing seasons from another control.
 function keepCurrentTimelineMarkVisible() {
   const viewportHeight = elements.timelineTrack.clientHeight;
   if (!viewportHeight) return;
@@ -286,14 +300,14 @@ function keepCurrentTimelineMarkVisible() {
   }
 }
 
+// Preview scroll-driven transitions before the input reaches its switch threshold.
 function updateScrollPreview(accumulation = scrollAccumulation, threshold = CHANGE_THRESHOLD) {
   const progress = accumulation / threshold;
   elements.archivePanel.style.transform = `translateY(${-progress * 24}px)`;
   elements.archivePanel.style.opacity = String(1 - Math.abs(progress) * 0.18);
 }
 
-// Scroll has signed momentum: reversing input first cancels the existing
-// movement, so a near-threshold gesture cannot immediately switch seasons.
+// Reversing input cancels accumulated progress so small gestures cannot skip seasons.
 function accumulateSeasonInput(delta) {
   if (!delta || seasonTransitioning || RECORDS.length === 0) return;
   panelEdgeAccumulation = 0;
@@ -313,6 +327,7 @@ function accumulateSeasonInput(delta) {
   }
 }
 
+// At the content's scroll edge, accumulate a separate gesture to change seasons.
 function changeSeasonAtPanelEdge(content, delta) {
   if (RECORDS.length === 0) return false;
   const direction = Math.sign(delta);
@@ -341,8 +356,7 @@ function changeSeasonAtPanelEdge(content, delta) {
   return true;
 }
 
-// The complete season panel leaves in the scroll direction and the next one
-// enters from the opposite side.
+// Animate the full panel between records, except when motion is reduced or hidden.
 async function transitionTo(index) {
   if (RECORDS.length === 0) return;
   const nextIndex = Math.max(0, Math.min(RECORDS.length - 1, index));
@@ -372,7 +386,7 @@ async function transitionTo(index) {
   const outgoingAnimation = panel.animate([
     { opacity: currentOpacity, transform: currentTransform },
     { opacity: 0, transform: `translateY(${outgoingOffset})` }
-  ], { duration: reducedMotion ? 1 : 240, easing: "ease-in", fill: "forwards" });
+  ], { duration: 240, easing: "ease-in", fill: "forwards" });
   await outgoingAnimation.finished;
   outgoingAnimation.cancel();
 
@@ -386,12 +400,13 @@ async function transitionTo(index) {
   await panel.animate([
     { opacity: 0, transform: `translateY(${incomingOffset})` },
     { opacity: 1, transform: "translateY(0)" }
-  ], { duration: reducedMotion ? 1 : 360, easing: "cubic-bezier(.2,.8,.2,1)" }).finished;
+  ], { duration: 360, easing: "cubic-bezier(.2,.8,.2,1)" }).finished;
 
   seasonTransitioning = false;
   panel.classList.remove("is-transitioning");
 }
 
+// Show a useful loading state before requesting the archive CSV.
 elements.panelContent.innerHTML = `
   <div class="spec-empty">
     <strong>LOADING SEASON ARCHIVE</strong>
@@ -407,12 +422,11 @@ loadArchiveData().then(() => {
   elements.panelContent.innerHTML = `
     <div class="spec-empty">
       <strong>ARCHIVE DATA COULD NOT BE LOADED</strong>
-      <p>Open this page through a local web server (such as VS Code Live Server) and keep ${escapeHtml(DATA_FILE.replace("%20", " "))} beside index.html.</p>
+      <p>Open this page through a local web server (such as VS Code Live Server) and keep ${escapeHtml(DATA_FILE)} beside index.html.</p>
     </div>`;
 });
 
-// Keep the browser viewport fixed; wheel distance is consumed by the season
-// threshold instead of scrolling the document or an inner results panel.
+// The page stays fixed; archive content scrolls normally and changes season at its edges.
 document.addEventListener("wheel", (event) => {
   if (event.ctrlKey || event.metaKey) return;
   if (event.target instanceof Element && event.target.closest("#timelineTrack")) return;
@@ -427,6 +441,7 @@ document.addEventListener("wheel", (event) => {
   accumulateSeasonInput(event.deltaY);
 }, { passive: false });
 
+// Resolve any pointer position near the rail to its closest season tick.
 function nearestTimelineIndex(clientY) {
   const bounds = elements.timelineTrack.getBoundingClientRect();
   const position = clientY - bounds.top + elements.timelineTrack.scrollTop;
@@ -436,6 +451,7 @@ function nearestTimelineIndex(clientY) {
   ));
 }
 
+// Highlight the closest tick even when the pointer does not land on its button.
 function showHoveredTimelineYear(index) {
   const mark = elements.timelineMarks.querySelector(`[data-index="${index}"]`);
   if (hoveredYearMark === mark) return;
@@ -451,6 +467,7 @@ elements.timelineMarks.addEventListener("pointerleave", () => {
   if (hoveredYearMark) hoveredYearMark.classList.remove("is-hovered");
   hoveredYearMark = null;
 });
+// Pointer clicks use the nearest tick; keyboard activation uses the focused button.
 elements.timelineMarks.addEventListener("click", (event) => {
   const mark = event.target.closest(".year-mark");
   if (!mark) return;
@@ -465,6 +482,7 @@ elements.timelineMarks.addEventListener("click", (event) => {
 document.querySelectorAll(".placeholder-link").forEach((link) => {
   link.addEventListener("click", (event) => event.preventDefault());
 });
+// Arrow and page keys mirror a quarter-threshold gesture for keyboard users.
 document.addEventListener("keydown", (event) => {
   if (event.altKey || event.ctrlKey || event.metaKey) return;
   if (event.target === elements.timelineTrack
@@ -478,7 +496,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// Touch swipes contribute to the same threshold rather than skipping seasons.
+// Touch swipes use the same threshold and preserve scrolling within the data panel.
 document.addEventListener("touchstart", (event) => {
   touchStartY = event.changedTouches[0].clientY;
   touchStartedInTimeline = event.target instanceof Element

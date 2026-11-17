@@ -1,13 +1,11 @@
 /* Global tokens keep the team palette and spacing easy to adjust in one place. */
 :root {
   color-scheme: dark;
-  --ink: #171719;
-  --ink-raised: #202023;
+  --ink: black;
   --paper: #f3f0e9;
   --muted: #9c9b9b;
   --line: rgba(243, 240, 233, .13);
-  --scarlet: #c6283d;
-  --scarlet-bright: #ed344b;
+  --scarlet: #BA0C2F;
   --gold: #d7a94b;
   --mono: "Nunito Sans", sans-serif;
   --sans: "Nunito Sans", sans-serif;
@@ -45,45 +43,30 @@ button { -webkit-tap-highlight-color: transparent; }
   height: 39px;
   place-items: center;
   border: 1px solid var(--scarlet);
-  color: var(--scarlet-bright);
+  color: var(--scarlet);
   font: 600 15px var(--display);
   letter-spacing: -.05em;
 }
 .brand-copy { display: grid; gap: 3px; }
 .brand-copy strong { font: 600 15px var(--display); letter-spacing: .12em; }
-.brand-copy strong span { color: var(--scarlet-bright); }
-.brand-copy small, .art-caption,
-.demo-notice, .result-table th, .spec-label, .result-label {
+.brand-copy strong span { color: var(--scarlet); }
+.brand-copy small, .spec-label {
   font-family: var(--mono);
 }
 .brand-copy small { color: var(--muted); font-size: 8px; letter-spacing: .13em; }
 .primary-nav { display: flex; height: 100%; gap: 37px; }
 .nav-link {
-  position: relative;
   padding: 2px 0 0;
-  border: 0;
-  background: transparent;
   color: #a4a2a1;
   cursor: pointer;
   font-size: 12px;
   transition: color .2s ease;
 }
-.nav-link:hover, .nav-link.is-active { color: var(--paper); }
-.nav-link.is-active::after {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 2px;
-  background: var(--scarlet-bright);
-  content: "";
-}
-
 /* Header copy keeps the title concise above the season archive. */
 .page-main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 5.3%; }
 .intro {
   position: relative;
-  flex: 0 0 183px;
+  flex: 0 0 145px;
   min-height: 150px;
   display: flex;
   align-items: center;
@@ -92,13 +75,13 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 .intro-copy { position: relative; z-index: 1; width: 100%; padding-bottom: 3px; text-align: center; }
 h1, h2, p { margin-top: 0; }
-h1 { margin: 12px 0 4px; font: 500 clamp(36px, 4vw, 51px)/1.08 var(--display); letter-spacing: .015em; }
-h1 span { color: var(--scarlet-bright); }
+h1 { margin: 12px 0 4px; font: 700 clamp(36px, 4vw, 51px)/1.08 var(--display); letter-spacing: .015em; }
 /* Timeline occupies a fixed rail; its active marker travels with each selected season. */
-.archive-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 32px; padding: 26px 0 25px; }
+.archive-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 25px; padding: 14px 0 12px; }
 .timeline { --timeline-axis-x: 56px; position: relative; display: flex; flex-direction: column; min-height: 0; padding: 5px 0 0 4px; }
 .timeline-heading { display: flex; align-items: baseline; justify-content: space-between; padding-right: 14px; }
-.timeline-current { color: var(--scarlet-bright); font: 500 17px var(--display); letter-spacing: .06em; }
+.eyebrow { font-weight: 600; }
+.timeline-current { color: var(--scarlet); font: 600 17px var(--display); letter-spacing: .06em; }
 .timeline-track {
   position: relative;
   flex: 1;
@@ -112,7 +95,7 @@ h1 span { color: var(--scarlet-bright); }
   mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
 }
 .timeline-track::-webkit-scrollbar { display: none; }
-.timeline-track:focus-visible { outline: 1px solid var(--scarlet-bright); outline-offset: 3px; }
+.timeline-track:focus-visible { outline: 1px solid var(--scarlet); outline-offset: 3px; }
 .timeline-rail { position: relative; width: 100%; }
 .track-line, .track-progress {
   position: absolute;
@@ -123,7 +106,7 @@ h1 span { color: var(--scarlet-bright); }
   background: rgba(243, 240, 233, .2);
 }
 .track-line { bottom: 30px; }
-.track-progress { height: 0; background: var(--scarlet-bright); transition: height .42s cubic-bezier(.2,.8,.2,1); }
+.track-progress { height: 0; background: var(--scarlet); transition: height .42s cubic-bezier(.2,.8,.2,1); }
 .timeline-marks { position: absolute; inset: 0; }
 .year-mark {
   position: absolute;
@@ -158,377 +141,136 @@ h1 span { color: var(--scarlet-bright); }
   transform: translateY(-50%);
   transition: color .2s ease;
 }
-.year-mark.is-current .year-tick { width: 11px; height: 2px; background: var(--scarlet-bright); }
+.year-mark.is-current .year-tick { width: 11px; height: 2px; background: var(--scarlet); }
 .year-mark.is-current .year-label { color: var(--paper); font-size: 10px; }
 .year-mark:hover .year-tick { width: 10px; background: var(--gold); }
 .year-mark:hover .year-label { color: var(--gold); }
-/* The archive panel slides as one unit when the selected season changes. */
+/* The archive panel keeps its season summary fixed above the scrollable data. */
 .archive-panel {
   min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 22px 26px 0;
-  border: 1px solid rgba(243, 240, 233, .12);
+  padding: 12px 20px 0;
   border-radius: 10px;
-  background: #1c1c1e;
+  background: #666666;
   transition: transform .1s ease-out, opacity .1s linear;
 }
 .archive-panel.is-transitioning { transition: none; }
-.panel-topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.panel-topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #4a4a4a; }
 .season-title { min-width: 0; }
 h2 { margin: 6px 0 0; font: 500 23px/1.1 var(--display); letter-spacing: .025em; }
-.season-code { margin: 0; }
-.overall-inline { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; gap: 3px; margin-left: auto; padding-left: 18px; border-left: 1px solid var(--line); text-align: right; }
-.season-event { margin: 0; color: #9c9694; font-size: 11px; line-height: 1.3; }
-.demo-notice {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 29px;
-  margin: 14px 0 17px;
-  padding: 5px 9px;
-  border-left: 2px solid var(--gold);
-  background: rgba(215, 169, 75, .07);
-  color: #aba7a0;
-  font-size: 8px;
-  letter-spacing: .025em;
-}
-.demo-notice span { color: var(--gold); font-size: 8px; letter-spacing: .08em; }
-.panel-content { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #5b575a transparent; scrollbar-width: thin; animation: content-in .32s ease both; }
-@keyframes content-in { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-/* The overview uses a compact scorecard, keeping the key season summary visible. */
-.overview-grid { display: grid; grid-template-columns: 1.18fr .82fr; gap: 12px; height: 100%; }
-.overall-card, .podium-card { position: relative; overflow: hidden; border: 1px solid var(--line); background: #222224; }
-.overall-card { display: flex; flex-direction: column; justify-content: space-between; padding: 17px 19px; }
-.card-kicker { color: #aaa4a1; font: 8px var(--mono); letter-spacing: .12em; }
-.overall-rank { display: flex; align-items: baseline; gap: 10px; margin-top: 5px; }
-.rank-number { color: var(--paper); font: 500 76px/.95 var(--display); }
-.rank-suffix { color: var(--scarlet-bright); font: 500 29px var(--display); }
-.rank-copy { color: #a39e9a; font-size: 10px; }
-.summary-bottom { display: flex; align-items: end; justify-content: space-between; gap: 12px; }
-.score-stack { display: flex; gap: 25px; }
-.metric-label { display: block; margin-bottom: 4px; color: #898486; font: 8px var(--mono); letter-spacing: .08em; }
-.metric-value { color: #e7e1d8; font: 500 16px var(--display); }
-.season-tag { padding: 5px 7px; border: 1px solid #c6283d55; color: var(--scarlet-bright); font: 8px var(--mono); letter-spacing: .08em; }
-.podium-card { display: flex; flex-direction: column; justify-content: space-between; padding: 17px 18px; }
-.podium-card h3 { margin: 11px 0; font: 500 19px var(--display); }
-.podium-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.podium-list li { display: flex; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 6px; color: #a6a1a0; font-size: 9px; }
-.podium-list strong { color: var(--paper); font: 9px var(--mono); }
-.podium-list li:first-child strong { color: var(--gold); }
-.overview-footnote { margin: 12px 0 0; color: #777476; font: 8px var(--mono); }
+.season-code { margin: 0; color: #f3f0e9; font-weight: 700; letter-spacing: .04em; }
+.overall-inline { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; gap: 5px; margin-left: auto; padding-left: 18px; border-left: 1px solid #4a4a4a; text-align: right; }
+.season-event { margin: 0; color: #d5d0ce; font-size: 11px; line-height: 1.3; }
+/* The season heading stays fixed while only its data area scrolls. */
+.panel-content { min-height: 0; flex: 1; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+/* Vehicle data tiles share the archive panel's gray surface and scarlet accents. */
+.spec-grid { display: grid; flex: 0 0 auto; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: minmax(72px, auto); gap: 7px; }
+.spec-item { display: flex; min-width: 0; min-height: 72px; flex-direction: column; justify-content: flex-start; padding: 9px 10px; border: 1px solid #444; border-radius: 4px; background: rgba(0,0,0,.14); }
+.spec-label { display: block; color: #d0c9ca; font-size: 9px; letter-spacing: .07em; line-height: 1.2; }
+.spec-value { display: block; margin-top: 6px; color: #f3f0e9; font: 500 14px/1.35 var(--display); letter-spacing: .025em; overflow-wrap: normal; white-space: normal; }
+.spec-empty { display: flex; min-height: 190px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; padding: 9px; border: 1px dashed #ffffff24; color: #999294; font: 8px var(--mono); letter-spacing: .07em; }
+.spec-empty strong { display: block; margin: 0; color: var(--paper); font: 600 12px var(--display); }
+.spec-empty p { max-width: 360px; margin: 0; font-size: 10px; line-height: 1.5; letter-spacing: normal; }
 
-/* The results table gives each competition category a clear ordinal finish. */
-.results-wrap { height: 100%; display: flex; flex-direction: column; }
-.results-summary { display: flex; justify-content: space-between; align-items: center; margin: 0 0 10px; color: #9b9693; font-size: 9px; }
-.results-summary strong { color: var(--gold); font: 10px var(--mono); }
-.result-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.result-table th { padding: 7px 10px; border-bottom: 1px solid var(--line); color: #817c7e; text-align: left; font-size: 8px; font-weight: 400; letter-spacing: .09em; }
-.result-table td { height: 31px; padding: 5px 10px; border-bottom: 1px solid rgba(243,240,233,.07); color: #e2ddd5; font-size: 10px; }
-.result-table tr:last-child td { border-bottom: 0; }
-.result-table th:first-child, .result-table td:first-child { width: 43%; }
-.result-table th:nth-child(2), .result-table td:nth-child(2) { width: 25%; }
-.result-table th:last-child, .result-table td:last-child { text-align: right; }
-.result-table td:nth-child(2) { color: #9a9493; font-family: var(--mono); font-size: 9px; }
-.position-badge { display: inline-block; min-width: 28px; padding: 4px 5px; border: 1px solid #ffffff16; color: #ddd7ce; text-align: center; font: 9px var(--mono); }
-.position-badge.top-three { border-color: #d7a94b61; color: var(--gold); }
-.result-score { color: #aaa5a1; font: 9px var(--mono); }
-
-/* A responsive grid displays every requested specification when present. */
-.specs-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: #999492; font-size: 9px; }
-.specs-heading strong { color: var(--gold); font: 9px var(--mono); font-weight: 400; }
-.spec-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
-.spec-item { min-width: 0; min-height: 52px; padding: 8px 9px 7px; border: 1px solid rgba(243,240,233,.1); background: rgba(255,255,255,.018); }
-.spec-label { display: block; color: #8d8889; font-size: 7px; letter-spacing: .05em; line-height: 1.2; }
-.spec-value { display: block; margin-top: 6px; color: #e7e0d8; font: 500 11px var(--display); letter-spacing: .025em; line-height: 1.35; }
-.spec-empty { display: grid; min-height: 170px; place-items: center; border: 1px dashed #ffffff24; color: #aaa4a2; text-align: center; }
-.spec-empty strong { display: block; margin-bottom: 8px; color: var(--paper); font: 500 20px var(--display); }
-.spec-empty p { max-width: 360px; margin: 0; font-size: 11px; line-height: 1.6; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
-
-/* Smaller screens keep the season rail visible and simplify only decorative spacing. */
-@media (max-width: 850px) {
-  .topbar { padding-right: 4%; padding-left: 4%; }
-  .page-main { padding-right: 4%; padding-left: 4%; }
-  .archive-layout { grid-template-columns: 125px minmax(0, 1fr); gap: 18px; }
-  .archive-panel { padding-right: 17px; padding-left: 17px; }
-  .spec-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 600px) {
-  .site-shell { min-height: 540px; }
-  .topbar { height: 65px; flex-basis: 65px; padding: 0 16px; }
-  .brand { gap: 8px; }
-  .brand-mark { width: 33px; height: 33px; }
-  .brand-copy strong { font-size: 12px; }
-  .brand-copy small { font-size: 7px; }
-  .primary-nav { gap: 14px; }
-  .nav-link { font-size: 10px; }
-  .page-main { padding: 0 15px; }
-  .intro { flex-basis: 139px; min-height: 125px; }
-  h1 { font-size: 35px; }
-  .archive-layout { grid-template-columns: 55px minmax(0, 1fr); gap: 9px; padding: 14px 0 14px; }
-  .timeline { padding-left: 0; }
-  .timeline-heading { display: block; padding: 0; }
-  .timeline-heading { font-size: 7px; }
-  .timeline-current { display: block; margin-top: 5px; font-size: 14px; }
-  .timeline-track { margin-left: 4px; }
-  .archive-panel { padding: 13px 10px 0; }
-  h2 { font-size: 19px; }
-  .demo-notice { align-items: flex-start; gap: 6px; margin: 10px 0; padding: 6px; font-size: 7px; line-height: 1.4; }
-  .demo-notice span { font-size: 7px; }
-  .overview-grid { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; gap: 7px; }
-  .overall-card, .podium-card { padding: 10px; }
-  .rank-number { font-size: 54px; }
-  .rank-suffix { font-size: 22px; }
-  .podium-card h3 { margin: 5px 0; font-size: 16px; }
-  .podium-list { gap: 4px; }
-  .podium-list li { padding-bottom: 3px; font-size: 8px; }
-  .overview-footnote { margin-top: 7px; font-size: 7px; }
-  .result-table td { height: 27px; padding: 4px 4px; font-size: 8px; }
-  .result-table th { padding: 6px 4px; font-size: 7px; }
-  .result-table th:first-child, .result-table td:first-child { width: 39%; }
-  .result-table th:nth-child(2), .result-table td:nth-child(2) { width: 28%; }
-  .result-table td:nth-child(2), .result-score { font-size: 7px; }
-  .position-badge { min-width: 23px; padding: 3px; font-size: 8px; }
-  .results-summary { font-size: 8px; }
-  .spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
-  .spec-item { min-height: 43px; padding: 6px; }
-  .spec-value { margin-top: 4px; font-size: 10px; }
-  .spec-label { font-size: 6px; }
-  .specs-heading { margin-bottom: 7px; font-size: 8px; }
-  .specs-heading strong { font-size: 7px; }
-}
+/* Motion remains subdued for users who request reduced animation. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
-/* The header items are future page destinations, not season-content tabs. */
+/* Navigation destinations stay distinct from the season-selection controls. */
 .primary-nav .nav-link { display: flex; align-items: center; text-decoration: none; }
-.primary-nav .nav-link.is-active::after { display: none; }
-.primary-nav .nav-link:hover { color: var(--scarlet-bright); }
+.primary-nav .nav-link:hover { color: var(--scarlet); }
 
-/* Keep the season archive compact enough to show results and specs together. */
-.intro { flex-basis: 145px; }
-.archive-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 25px; padding: 14px 0 12px; }
-.archive-panel { padding: 12px 20px 0; }
-.panel-topline { min-height: 0; }
-.demo-notice { min-height: 24px; margin: 7px 0 5px; padding: 4px 8px; font-size: 7px; }
-.demo-notice span { font-size: 7px; }
-.panel-content { min-height: 0; flex: 1; overflow: hidden; animation: none; }
-.season-data { height: 100%; min-height: 0; display: grid; grid-template-rows: auto auto; gap: 12px; }
+/* The season data stacks sections vertically and allows the panel body to scroll. */
+.season-data { min-height: 100%; display: grid; grid-template-rows: auto auto auto; gap: 12px; padding-bottom: 14px; }
 .season-main { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; gap: 12px; }
-.summary-kicker { color: #aaa4a1; font: 8px var(--mono); letter-spacing: .09em; }
-.overall-place { color: var(--paper); font: 500 clamp(16px, 1.8vw, 22px)/1.05 var(--display); }
+.summary-kicker { color: #e0d9d4; font: 11px var(--mono); letter-spacing: .09em; }
+.overall-place { color: #f3f0e9; font: 700 25px/1.05 var(--display); }
 .car-image-frame { width: 100%; min-width: 0; aspect-ratio: 16 / 9; }
-.car-image-frame img { display: block; width: 100%; height: 100%; border-radius: 4px; object-fit: cover; }
-.results-section, .specs-section { min-height: 0; display: flex; flex-direction: column; }
-.section-heading { display: flex; min-height: 17px; align-items: center; justify-content: space-between; color: #b7b0aa; font: 8px var(--mono); letter-spacing: .1em; }
-.results-grid { display: grid; flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
-.result-card { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 7px; border: 1px solid rgba(243,240,233,.1); background: rgba(255,255,255,.018); }
-.result-event { display: grid; min-width: 0; gap: 2px; }
-.result-event strong { color: #e4ded6; font-size: 9px; font-weight: 500; line-height: 1.25; }
-.event-time { color: var(--gold); font: 8px var(--mono); }
-.result-finish { display: flex; flex: 0 0 auto; justify-content: flex-end; }
-.result-finish strong { color: #dcd5cd; font: 500 10px var(--display); }
+.car-image-frame img { display: block; width: 100%; height: 100%; border: 2px solid black; border-radius: 12px; object-fit: cover; }
+.results-section, .specs-section { display: flex; min-height: 0; flex: 0 0 auto; flex-direction: column; }
+.section-heading { display: flex; min-height: 20px; align-items: center; justify-content: space-between; margin-bottom: 5px; color: #e0d9d4; font: 11px var(--mono); letter-spacing: .1em; }
+.results-grid { display: grid; flex: 0 0 auto; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(56px, auto); gap: 6px; }
+.result-card { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border: 1px solid #444; border-radius: 4px; background: rgba(0,0,0,.14); }
+.result-event { display: grid; min-width: 0; gap: 4px; }
+.result-event strong { color: #e4ded6; font-size: 13px; font-weight: 500; line-height: 1.25; }
+.event-time { color: var(--gold); font: 10px var(--mono); }
+.result-finish { display: flex; flex: 0 0 auto; justify-content: flex-end; gap: 4px; }
+.result-finish strong { color: #dcd5cd; font: 500 16px var(--display); }
 .result-finish strong.top-three { color: var(--gold); }
-.specs-section { min-height: 0; }
-.spec-grid { display: grid; min-height: 0; flex: 1; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(24px, 1fr)); gap: 4px; }
-.spec-item { display: flex; min-width: 0; min-height: 0; flex-direction: column; justify-content: center; padding: 3px 7px; }
-.spec-label { font-size: 6px; letter-spacing: .07em; }
-.spec-value { margin-top: 3px; font-size: 9px; }
-.spec-empty { display: flex; flex: 1; min-height: 0; align-items: center; padding-left: 9px; border: 1px dashed #ffffff24; color: #999294; font: 8px var(--mono); letter-spacing: .07em; }
-
-@media (max-width: 850px) {
-  .intro { flex-basis: 132px; }
-  .archive-layout { grid-template-columns: 150px minmax(0, 1fr); gap: 16px; }
-  .archive-panel { padding-right: 14px; padding-left: 14px; }
-  .result-card { padding: 5px; }
-  .result-event strong { font-size: 10px; }
-  .result-finish strong { font-size: 12px; }
-  .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 600px) {
-  .topbar { padding-right: 12px; padding-left: 12px; }
-  .primary-nav { gap: 10px; }
-  .primary-nav .nav-link { font-size: 9px; }
-  .page-main { padding-right: 15px; padding-left: 15px; }
-  .intro { flex-basis: 128px; }
-  .archive-layout { grid-template-columns: 68px minmax(0, 1fr); gap: 8px; padding-top: 10px; padding-bottom: 9px; }
-  .timeline { --timeline-axis-x: 19px; }
-  .archive-panel { padding: 10px 9px 0; }
-  h2 { font-size: 18px; }
-  .panel-topline { flex-direction: column; align-items: stretch; gap: 8px; }
-  .overall-inline { flex-direction: row; align-items: baseline; justify-content: space-between; margin-left: 0; padding: 7px 0 0; border-top: 1px solid var(--line); border-left: 0; text-align: left; }
-  .overall-place { text-align: right; }
-  .demo-notice { min-height: 28px; align-items: center; gap: 5px; margin: 6px 0 4px; padding: 4px 5px; font-size: 6px; line-height: 1.25; }
-  .demo-notice span { font-size: 6px; }
-  .season-main { grid-template-columns: minmax(0, 1fr); }
-  .results-section { order: 1; }
-  .car-image-frame { order: 2; }
-  .season-main { gap: 10px; }
-  .season-data { grid-template-rows: auto auto; gap: 8px; }
-  .section-heading { min-height: 14px; font-size: 7px; }
-  .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; }
-  .result-card { gap: 2px; padding: 3px 4px; }
-  .result-event strong { font-size: 8px; }
-  .event-time { font-size: 7px; }
-  .result-finish strong { font-size: 9px; }
-  .spec-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(7, minmax(21px, 1fr)); gap: 3px; }
-  .spec-item { padding: 3px 4px; }
-  .spec-label { font-size: 5px; }
-  .spec-value { font-size: 7px; }
-  .spec-empty { font-size: 6px; }
-}
-
-@media (max-height: 650px) {
-  .site-shell { min-height: 0; }
-  .intro { flex-basis: 112px; min-height: 105px; }
-  .archive-layout { padding-top: 8px; padding-bottom: 7px; }
-  .archive-panel { padding-top: 8px; }
-  .demo-notice { min-height: 20px; margin-top: 4px; margin-bottom: 3px; }
-  .season-data { grid-template-rows: auto auto; gap: 6px; }
-  .section-heading { min-height: 12px; }
-  .results-grid { grid-template-rows: none; }
-  .spec-grid { grid-template-rows: repeat(4, minmax(18px, 1fr)); gap: 2px; }
-  .spec-item { padding-top: 1px; padding-bottom: 1px; }
-  .spec-value { margin-top: 1px; }
-}
-
-@media (max-width: 600px) and (max-height: 650px) {
-  .spec-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(17px, 1fr)); }
-  .spec-label { font-size: 4px; }
-  .spec-value { font-size: 6px; }
-}
 
 /* Broad year targets are resolved to the closest tick in the visible rail. */
 .timeline-marks { cursor: pointer; }
 .year-mark { border-radius: 3px; z-index: 1; }
 .year-mark.is-hovered { background: rgba(243, 240, 233, .045); }
-.year-mark:focus-visible { outline: 1px solid var(--scarlet-bright); outline-offset: -2px; }
+.year-mark:focus-visible { outline: 1px solid var(--scarlet); outline-offset: -2px; }
 .year-mark.is-current { z-index: 2; }
 
-/* Grow the archive inside its fixed shell; only this data region scrolls. */
-.panel-content {
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
+/* Responsive breakpoints preserve the rail and stack the season details on phones. */
+@media (max-width: 1100px) and (min-width: 851px) {
+  .result-card { padding: 6px; }
+  .result-event strong { font-size: clamp(8px, 1vw, 11px); }
+  .result-finish strong { font-size: clamp(9px, 1.15vw, 12px); }
+  .spec-value { font-size: clamp(9px, 1.1vw, 12px); }
 }
-.season-data {
-  height: auto;
-  min-height: 100%;
-  grid-template-rows: auto auto auto;
-  gap: 12px;
-  padding-bottom: 14px;
-}
-.summary-kicker { font-size: 10px; }
-.overall-place { font-size: 25px; }
-.section-heading { min-height: 20px; margin-bottom: 5px; font-size: 10px; }
-.results-section, .specs-section { min-height: 0; flex: 0 0 auto; }
-.results-grid {
-  flex: 0 0 auto;
-  grid-template-rows: none;
-  grid-auto-rows: minmax(56px, auto);
-  gap: 6px;
-}
-.result-card { gap: 8px; padding: 8px 10px; }
-.result-event { gap: 4px; }
-.result-event strong { font-size: 11px; }
-.event-time { font-size: 9px; }
-.result-finish { gap: 4px; }
-.result-finish strong { font-size: 14px; }
-.spec-grid {
-  flex: 0 0 auto;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: none;
-  grid-auto-rows: minmax(64px, auto);
-  gap: 7px;
-}
-.spec-item { min-height: 64px; padding: 9px 10px; }
-.spec-label { font-size: 8px; }
-.spec-value { margin-top: 6px; font-size: 12px; }
-.spec-empty { min-height: 190px; font-size: 10px; }
 
 @media (max-width: 850px) {
-  .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topbar, .page-main { padding-right: 4%; padding-left: 4%; }
+  .intro { flex-basis: 132px; }
+  .archive-layout { grid-template-columns: 150px minmax(0, 1fr); gap: 16px; }
+  .archive-panel { padding-right: 14px; padding-left: 14px; }
+  .season-main { grid-template-columns: minmax(0, 1fr); }
   .spec-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 600px) {
-  .year-mark { height: 24px; }
-  .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(48px, auto); }
-  .result-event strong { font-size: 10px; }
-  .event-time { font-size: 8px; }
-  .spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(58px, auto); }
-  .spec-item { min-height: 58px; padding: 8px; }
-  .spec-label { font-size: 7px; }
-  .spec-value { font-size: 11px; }
-}
-
-/* Readable card type scales down gently instead of shrinking into tiny labels. */
-.section-heading { font-size: 11px; }
-.summary-kicker { font-size: 11px; }
-.result-event strong { font-size: 13px; }
-.event-time { font-size: 10px; }
-.result-finish strong { font-size: 16px; }
-.spec-grid { grid-auto-rows: minmax(72px, auto); }
-.spec-item { min-height: 72px; }
-.spec-label { font-size: 9px; }
-.spec-value { font-size: 14px; }
-
-@media (max-width: 600px) {
-  .section-heading { font-size: 10px; }
-  .summary-kicker { font-size: 9px; }
-  .result-event strong { font-size: 11px; }
-  .event-time { font-size: 9px; }
-  .result-finish strong { font-size: 14px; }
-  .spec-grid { grid-auto-rows: minmax(66px, auto); }
-  .spec-item { min-height: 66px; padding: 8px; }
-  .spec-label { font-size: 8px; }
-  .spec-value { font-size: 12px; }
-}
-
-.spec-grid { grid-template-rows: none; grid-auto-rows: minmax(72px, auto); }
-.spec-item { justify-content: flex-start; }
-.spec-value {
-  overflow: visible;
-  overflow-wrap: normal;
-  line-height: 1.35;
-  text-overflow: clip;
-  white-space: normal;
-}
-
-@media (max-width: 600px) {
-  .spec-grid { grid-auto-rows: minmax(66px, auto); }
-}
-
-@media (max-width: 600px) {
-  .overall-inline { gap: 4px; }
-  .summary-kicker { font-size: 7px; }
-}
-
-@media (max-width: 850px) {
   .result-card { padding: 5px; }
   .result-event { flex: 1; }
   .result-event strong { font-size: 10px; }
   .result-finish strong { font-size: 12px; }
 }
 
-@media (max-width: 850px) {
-  .season-main { grid-template-columns: minmax(0, 1fr); }
-}
-
 @media (max-width: 700px) {
   .spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (min-width: 851px) and (max-width: 1100px) {
-  .result-event strong { font-size: clamp(8px, 1vw, 11px); }
-  .result-finish strong { font-size: clamp(9px, 1.15vw, 12px); }
-  .result-card { padding: 6px; }
-  .spec-value { font-size: clamp(9px, 1.1vw, 12px); }
+@media (max-width: 600px) {
+  .site-shell { min-height: 540px; }
+  .topbar { height: 65px; flex-basis: 65px; padding-right: 12px; padding-left: 12px; }
+  .brand { gap: 8px; }
+  .brand-mark { width: 33px; height: 33px; }
+  .brand-copy strong { font-size: 12px; }
+  .brand-copy small { font-size: 7px; }
+  .primary-nav { gap: 10px; }
+  .primary-nav .nav-link { font-size: 9px; }
+  .page-main { padding-right: 15px; padding-left: 15px; }
+  .intro { flex-basis: 128px; min-height: 125px; }
+  h1 { font-size: 35px; }
+  h2 { font-size: 18px; }
+  .archive-layout { grid-template-columns: 68px minmax(0, 1fr); gap: 8px; padding-top: 10px; padding-bottom: 9px; }
+  .timeline { --timeline-axis-x: 19px; padding-left: 0; }
+  .timeline-heading { display: block; padding: 0; font-size: 7px; }
+  .timeline-current { display: block; margin-top: 5px; font-size: 14px; }
+  .timeline-track { margin-left: 4px; }
+  .archive-panel { padding: 10px 9px 0; }
+  .panel-topline { flex-direction: column; align-items: stretch; gap: 8px; }
+  .overall-inline { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 4px; margin-left: 0; padding: 7px 0 0; border-top: 1px solid #4a4a4a; border-left: 0; text-align: left; }
+  .overall-place { text-align: right; }
+  .summary-kicker { font-size: 7px; }
+  .results-section { order: 1; }
+  .car-image-frame { order: 2; }
+  .season-main { gap: 10px; }
+  .section-heading { font-size: 10px; }
+  .results-grid { grid-auto-rows: minmax(48px, auto); }
+  .result-event strong { font-size: 10px; }
+  .event-time { font-size: 9px; }
+  .spec-grid { grid-auto-rows: minmax(66px, auto); }
+  .spec-item { min-height: 66px; padding: 8px; }
+  .spec-label { font-size: 8px; }
+  .spec-value { font-size: 12px; }
+}
+
+@media (max-width: 420px) {
+  .results-grid, .spec-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 380px) {
@@ -536,6 +278,9 @@ h2 { margin: 6px 0 0; font: 500 23px/1.1 var(--display); letter-spacing: .025em;
   .primary-nav { height: auto; flex-wrap: wrap; justify-content: center; gap: 6px 12px; }
 }
 
-@media (max-width: 420px) {
-  .results-grid, .spec-grid { grid-template-columns: minmax(0, 1fr); }
+@media (max-height: 650px) {
+  .site-shell { min-height: 0; }
+  .intro { flex-basis: 112px; min-height: 105px; }
+  .archive-layout { padding-top: 8px; padding-bottom: 7px; }
+  .archive-panel { padding-top: 8px; }
 }
