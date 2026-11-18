@@ -298,7 +298,18 @@ function keepCurrentTimelineMarkVisible() {
       Math.min(maxScroll, markPosition - viewportHeight / 2)
     );
   }
+  updateTimelineFade();
 }
+
+function updateTimelineFade() {
+  const track = elements.timelineTrack;
+  const maxScroll = track.scrollHeight - track.clientHeight;
+  track.classList.toggle("is-at-top", track.scrollTop <= 1);
+  track.classList.toggle("is-at-bottom", maxScroll <= 1 || track.scrollTop >= maxScroll - 1);
+}
+
+elements.timelineTrack.addEventListener("scroll", updateTimelineFade, { passive: true });
+window.addEventListener("resize", updateTimelineFade);
 
 // Preview scroll-driven transitions before the input reaches its switch threshold.
 function updateScrollPreview(accumulation = scrollAccumulation, threshold = CHANGE_THRESHOLD) {

@@ -94,6 +94,18 @@ h1 { margin: 12px 0 4px; font: 700 clamp(36px, 4vw, 51px)/1.08 var(--display); l
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
 }
+.timeline-track.is-at-top {
+  -webkit-mask-image: linear-gradient(to bottom, #000, #000 85%, transparent);
+  mask-image: linear-gradient(to bottom, #000, #000 85%, transparent);
+}
+.timeline-track.is-at-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 15%, #000);
+  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000);
+}
+.timeline-track.is-at-top.is-at-bottom {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
 .timeline-track::-webkit-scrollbar { display: none; }
 .timeline-track:focus-visible { outline: 1px solid var(--scarlet); outline-offset: 3px; }
 .timeline-rail { position: relative; width: 100%; }
