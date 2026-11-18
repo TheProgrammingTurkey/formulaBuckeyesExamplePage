@@ -183,18 +183,9 @@ const elements = {
   archivePanel: document.querySelector(".archive-panel")
 };
 
-// Wheel, keyboard, and touch input share transition progress and state.
 let currentIndex = 0;
-let scrollAccumulation = 0;
-let panelEdgeAccumulation = 0;
 let seasonTransitioning = false;
-let touchStartY = null;
-let touchStartedInTimeline = false;
-let touchStartedInDataPanel = false;
-let touchDataScrollTop = 0;
 let hoveredYearMark = null;
-const CHANGE_THRESHOLD = 360;
-const PANEL_EDGE_THRESHOLD = 720;
 const TIMELINE_STEP = 30;
 
 // Render each season as a labeled row in the independently scrollable rail.
@@ -311,62 +302,6 @@ function updateTimelineFade() {
 elements.timelineTrack.addEventListener("scroll", updateTimelineFade, { passive: true });
 window.addEventListener("resize", updateTimelineFade);
 
-// Preview scroll-driven transitions before the input reaches its switch threshold.
-function updateScrollPreview(accumulation = scrollAccumulation, threshold = CHANGE_THRESHOLD) {
-  const progress = accumulation / threshold;
-  elements.archivePanel.style.transform = `translateY(${-progress * 24}px)`;
-  elements.archivePanel.style.opacity = String(1 - Math.abs(progress) * 0.18);
-}
-
-// Reversing input cancels accumulated progress so small gestures cannot skip seasons.
-function accumulateSeasonInput(delta) {
-  if (!delta || seasonTransitioning || RECORDS.length === 0) return;
-  panelEdgeAccumulation = 0;
-  const nextAccumulation = scrollAccumulation + delta;
-  const nextDirection = Math.sign(nextAccumulation);
-  if ((nextDirection < 0 && currentIndex === 0)
-    || (nextDirection > 0 && currentIndex === RECORDS.length - 1)) {
-    scrollAccumulation = 0;
-    updateScrollPreview();
-    return;
-  }
-
-  scrollAccumulation = nextAccumulation;
-  updateScrollPreview();
-  if (Math.abs(scrollAccumulation) >= CHANGE_THRESHOLD) {
-    transitionTo(currentIndex + Math.sign(scrollAccumulation));
-  }
-}
-
-// At the content's scroll edge, accumulate a separate gesture to change seasons.
-function changeSeasonAtPanelEdge(content, delta) {
-  if (RECORDS.length === 0) return false;
-  const direction = Math.sign(delta);
-  if (!direction) return false;
-  const maxScroll = content.scrollHeight - content.clientHeight;
-  const hasOverflow = maxScroll > 1;
-  const atEdge = !hasOverflow
-    || (direction > 0 && content.scrollTop >= maxScroll - 1)
-    || (direction < 0 && content.scrollTop <= 1);
-  if (!atEdge) {
-    scrollAccumulation = 0;
-    panelEdgeAccumulation = 0;
-    updateScrollPreview(0);
-    return false;
-  }
-
-  scrollAccumulation = 0;
-  panelEdgeAccumulation += delta;
-  updateScrollPreview(panelEdgeAccumulation, PANEL_EDGE_THRESHOLD);
-  if (Math.abs(panelEdgeAccumulation) >= PANEL_EDGE_THRESHOLD) {
-    const nextDirection = Math.sign(panelEdgeAccumulation);
-    panelEdgeAccumulation = 0;
-    updateScrollPreview(0);
-    transitionTo(currentIndex + nextDirection);
-  }
-  return true;
-}
-
 // Animate the full panel between records, except when motion is reduced or hidden.
 async function transitionTo(index) {
   if (RECORDS.length === 0) return;
@@ -383,8 +318,6 @@ async function transitionTo(index) {
 
   if (reducedMotion || document.hidden) {
     currentIndex = nextIndex;
-    scrollAccumulation = 0;
-    panelEdgeAccumulation = 0;
     panel.style.transform = "";
     panel.style.opacity = "";
     render();
@@ -402,8 +335,6 @@ async function transitionTo(index) {
   outgoingAnimation.cancel();
 
   currentIndex = nextIndex;
-  scrollAccumulation = 0;
-  panelEdgeAccumulation = 0;
   panel.style.transform = "";
   panel.style.opacity = "";
   render();
@@ -436,21 +367,6 @@ loadArchiveData().then(() => {
       <p>Open this page through a local web server (such as VS Code Live Server) and keep ${escapeHtml(DATA_FILE)} beside index.html.</p>
     </div>`;
 });
-
-// The page stays fixed; archive content scrolls normally and changes season at its edges.
-document.addEventListener("wheel", (event) => {
-  if (event.ctrlKey || event.metaKey) return;
-  if (event.target instanceof Element && event.target.closest("#timelineTrack")) return;
-  const content = event.target instanceof Element
-    ? event.target.closest("#panelContent")
-    : null;
-  if (content) {
-    if (changeSeasonAtPanelEdge(content, event.deltaY)) event.preventDefault();
-    return;
-  }
-  event.preventDefault();
-  accumulateSeasonInput(event.deltaY);
-}, { passive: false });
 
 // Resolve any pointer position near the rail to its closest season tick.
 function nearestTimelineIndex(clientY) {
@@ -493,53 +409,3 @@ elements.timelineMarks.addEventListener("click", (event) => {
 document.querySelectorAll(".placeholder-link").forEach((link) => {
   link.addEventListener("click", (event) => event.preventDefault());
 });
-// Arrow and page keys mirror a quarter-threshold gesture for keyboard users.
-document.addEventListener("keydown", (event) => {
-  if (event.altKey || event.ctrlKey || event.metaKey) return;
-  if (event.target === elements.timelineTrack
-    && ["ArrowDown", "ArrowUp", "PageDown", "PageUp"].includes(event.key)) return;
-  if (event.key === "ArrowDown" || event.key === "PageDown") {
-    event.preventDefault();
-    accumulateSeasonInput(CHANGE_THRESHOLD / 4);
-  } else if (event.key === "ArrowUp" || event.key === "PageUp") {
-    event.preventDefault();
-    accumulateSeasonInput(-CHANGE_THRESHOLD / 4);
-  }
-});
-
-// Touch swipes use the same threshold and preserve scrolling within the data panel.
-document.addEventListener("touchstart", (event) => {
-  touchStartY = event.changedTouches[0].clientY;
-  touchStartedInTimeline = event.target instanceof Element
-    && event.target.closest("#timelineTrack") !== null;
-  touchStartedInDataPanel = event.target instanceof Element
-    && event.target.closest("#panelContent") !== null;
-  touchDataScrollTop = touchStartedInDataPanel ? elements.panelContent.scrollTop : 0;
-}, { passive: true });
-document.addEventListener("touchend", (event) => {
-  if (touchStartY === null) return;
-  const distance = touchStartY - event.changedTouches[0].clientY;
-  if (Math.abs(distance) >= 35 && !touchStartedInTimeline) {
-    if (touchStartedInDataPanel) {
-      const content = elements.panelContent;
-      const maxScroll = content.scrollHeight - content.clientHeight;
-      const direction = Math.sign(distance);
-      const startedAtEdge = maxScroll <= 1
-        || (direction > 0 && touchDataScrollTop >= maxScroll - 1)
-        || (direction < 0 && touchDataScrollTop <= 1);
-      if (startedAtEdge) {
-        changeSeasonAtPanelEdge(content, distance);
-      } else {
-        scrollAccumulation = 0;
-        panelEdgeAccumulation = 0;
-        updateScrollPreview(0);
-      }
-    } else {
-      accumulateSeasonInput(distance);
-    }
-  }
-  touchStartY = null;
-  touchStartedInTimeline = false;
-  touchStartedInDataPanel = false;
-  touchDataScrollTop = 0;
-}, { passive: true });
